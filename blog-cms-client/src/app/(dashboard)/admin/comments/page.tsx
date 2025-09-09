@@ -42,11 +42,8 @@ export default function CommentsPage() {
     if (!confirm("Are you sure you want to delete this comment?")) return;
 
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/comments/${id}`, {
+      await apiFetch(`/comments/${id}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
       });
 
       setComments((prev) => prev.filter((comment) => comment._id !== id));

@@ -80,7 +80,7 @@ export default function PostsPage() {
                   </td>
                   <td className="p-3 border-b space-x-3">
                     <Link
-                      href={`/admin/posts/edit/${post._id}`}
+                      href={`/admin/posts/${post.slug}/edit`}
                       className="text-blue-600 hover:underline"
                     >
                       Edit
