@@ -13,7 +13,7 @@ export async function listAllComments(req, res) {
     Comment.countDocuments(),
   ]);
 
-  res.json(ok({ success: true, data: items, total }));
+  res.json(ok({ success: true, items, total }));
 }
 
 export async function listComments(req, res) {
