@@ -22,7 +22,7 @@ export default function NewPostPage() {
       body: JSON.stringify({
         title,
         content,
-        imageUrl,
+        coverImage: imageUrl,
         tags: tags.split(",").map((t) => t.trim()),
       }),
     });
