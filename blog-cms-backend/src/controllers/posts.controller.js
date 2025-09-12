@@ -94,7 +94,7 @@ export async function createPost(req, res) {
     title,
     slug,
     content,
-    tags,
+    tags: tags.map((t) => t.trim()).filter((t) => t.length > 0),
     coverImage,
     author: req.user._id,
   });
@@ -112,7 +112,10 @@ export async function updatePost(req, res) {
       details: parsed.error.flatten(),
     });
 
-  const update = { ...parsed.data };
+  const update = {
+    ...parsed.data,
+    tags: parsed.data.tags?.map((t) => t.trim()).filter((t) => t.length > 0),
+  };
 
   if (parsed.data.title) {
     update.slug = await uniqueSlug(
