@@ -1,10 +1,10 @@
 import { apiFetch } from "@/lib/fetcher";
 import Link from "next/link";
 import Image from "next/image";
+import { marked } from "marked";
 import { PaginatedPosts } from "@/types";
 
 import Hero from "@/components/Hero";
-// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 export default async function HomePage() {
@@ -25,7 +25,7 @@ export default async function HomePage() {
         </h2>
         <div className="grid md:grid-cols-3 gap-8">
           {posts.map((post) => (
-            <div
+            <article
               key={post._id}
               className="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden flex flex-col"
             >
@@ -39,9 +39,12 @@ export default async function HomePage() {
               </div>
               <div className="p-6 flex flex-col flex-1">
                 <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
-                <p className="text-gray-600 mb-4 flex-1">
-                  {post.content.substring(0, 150)}...
-                </p>
+                <div
+                  className="text-gray-600 mb-4 flex-1 line-clamp-3"
+                  dangerouslySetInnerHTML={{
+                    __html: marked.parse(post.content || ""),
+                  }}
+                />
                 <Link
                   href={`/post/${post.slug}`}
                   className="text-indigo-600 font-medium hover:underline mt-auto"
@@ -49,7 +52,7 @@ export default async function HomePage() {
                   Read more →
                 </Link>
               </div>
-            </div>
+            </article>
           ))}
         </div>
       </section>
