@@ -8,6 +8,7 @@ import env from "./src/config/env.js";
 import authRoutes from "./src/routes/auth.routes.js";
 import postRoutes from "./src/routes/posts.routes.js";
 import commentRoutes from "./src/routes/comments.routes.js";
+import adminRoutes from "./src/routes/admin.routes.js";
 import { errorHandler } from "./src/middleware/errorHandler.js";
 
 const app = express();
@@ -30,6 +31,7 @@ app.get("/api/health", (_req, res) =>
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.use(errorHandler);
 
