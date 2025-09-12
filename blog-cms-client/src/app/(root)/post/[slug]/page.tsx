@@ -3,6 +3,7 @@ import { apiFetch } from "@/lib/fetcher";
 import { Post } from "@/types";
 
 import CommentSection from "@/components/comments/CommentSection";
+import { Badge } from "@/components/ui/badge";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -28,7 +29,19 @@ export default async function PostPage({ params }: Props) {
         by {post.author?.username || "Unknown"} on{" "}
         {new Date(post.createdAt).toLocaleDateString()}
       </p>
-      <div dangerouslySetInnerHTML={{ __html: post.content }} />
+      <div
+        className="prose dark:prose-invert max-w-none"
+        dangerouslySetInnerHTML={{ __html: post.content }}
+      />
+      {post.tags && post.tags.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-6">
+          {post.tags.map((tag: string, idx: number) => (
+            <Badge key={idx} variant="secondary" className="text-sm">
+              #{tag}
+            </Badge>
+          ))}
+        </div>
+      )}
       <CommentSection postId={post._id} />
     </article>
   );
