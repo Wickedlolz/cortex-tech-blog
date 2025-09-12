@@ -33,7 +33,7 @@ export default function EditPostPage() {
     e.preventDefault();
     if (!post) return;
 
-    await apiFetch<Post>(`/posts/${id}`, {
+    await apiFetch<Post>(`/posts/${post._id}`, {
       method: "PUT",
       body: JSON.stringify({
         title: post.title,
