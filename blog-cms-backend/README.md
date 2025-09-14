@@ -1,4 +1,4 @@
-# Blog CMS Backend (Express + MongoDB + TypeScript)
+# Blog CMS Backend (Express + MongoDB)
 
 A clean REST API for a blog + CMS with role-based auth.
 
