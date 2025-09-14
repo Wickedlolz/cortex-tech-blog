@@ -44,7 +44,7 @@ export default function PostsPage() {
   if (loading) return <p>Loading posts...</p>;
 
   return (
-    <div className="bg-white shadow rounded-xl p-6">
+    <section className="bg-white shadow rounded-xl p-6">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Manage Posts</h2>
         <Link
@@ -98,6 +98,6 @@ export default function PostsPage() {
           </table>
         </div>
       )}
-    </div>
+    </section>
   );
 }
