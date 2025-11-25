@@ -5,13 +5,6 @@ import { apiFetch } from "@/lib/fetcher";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { User } from "@/types";
 
-// interface User {
-//   _id: string;
-//   username: string;
-//   email: string;
-//   role: string;
-// }
-
 interface AuthContextType {
   user: User | null;
   loading: boolean;

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { Post } from "../models/Post.js";
 import { User } from "../models/User.js";
+import { Comment } from "../models/Comment.js";
 import { uniqueSlug } from "../utils/slug.js";
 import { ok } from "../utils/responses.js";
 
@@ -74,6 +75,26 @@ export async function getPostBySlug(req, res) {
   res.json(ok(post));
 }
 
+export async function getRelatedPosts(req, res) {
+  const { slug } = req.params;
+  const post = await Post.findOne({ slug }).select("tags").lean();
+
+  if (!post) {
+    return res.status(404).json({ success: false, message: "Post not found" });
+  }
+
+  const related = await Post.find({
+    _id: { $ne: post._id },
+    tags: { $in: post.tags },
+  })
+    .sort({ createdAt: -1 })
+    .limit(3)
+    .populate("author", "username role")
+    .lean();
+
+  res.json(ok(related));
+}
+
 export async function createPost(req, res) {
   const parsed = createPostSchema.safeParse(req.body);
   if (!parsed.success) {
@@ -139,5 +160,8 @@ export async function deletePost(req, res) {
     return res.status(404).json({ success: false, message: "Post not found" });
   }
 
-  res.json(ok({ message: "Post deleted" }));
+  // Cascade delete comments
+  await Comment.deleteMany({ postId: id });
+
+  res.json(ok({ message: "Post and associated comments deleted" }));
 }

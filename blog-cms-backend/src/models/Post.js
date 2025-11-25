@@ -12,4 +12,7 @@ const PostSchema = new Schema(
   { timestamps: true }
 );
 
+PostSchema.index({ tags: 1 });
+PostSchema.index({ createdAt: -1 });
+
 export const Post = model("Post", PostSchema);

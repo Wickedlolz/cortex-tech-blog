@@ -1,157 +1,115 @@
 import { apiFetch } from "@/lib/fetcher";
 import Link from "next/link";
-import Image from "next/image";
-import { marked } from "marked";
-import { PaginatedPosts } from "@/types";
+import { PaginatedPosts, Post } from "@/types";
 
 import Hero from "@/components/Hero";
+import PostCard from "@/components/PostCard";
+import CTASection from "@/components/CTASection";
 import { Button } from "@/components/ui/button";
+import { ArrowRight, BookOpen, Users, Zap } from "lucide-react";
 
 export default async function HomePage() {
-  const data = await apiFetch<PaginatedPosts>("/posts");
-  const posts = data.items;
+  let posts: Post[] = [];
 
-  if (!posts) {
-    return <p className="p-6 text-gray-500">Loading...</p>;
+  try {
+    const data = await apiFetch<PaginatedPosts>("/posts");
+    posts = data.items || [];
+  } catch (error) {
+    console.error("Failed to fetch posts:", error);
+    // Fallback to empty posts array
   }
 
   return (
     <>
       <Hero />
 
-      <section className="max-w-6xl mx-auto px-6 py-20">
-        <h2 className="text-3xl font-bold text-gray-900 mb-10 text-center">
-          Featured Posts
-        </h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          {posts.map((post) => (
-            <article
-              key={post._id}
-              className="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden flex flex-col"
-            >
-              <div className="relative w-full h-48">
-                <Image
-                  src={post.coverImage || ""}
-                  alt={post.title}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-6 flex flex-col flex-1">
-                <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
-                <div
-                  className="text-gray-600 mb-4 flex-1 line-clamp-3"
-                  dangerouslySetInnerHTML={{
-                    __html: marked.parse(post.content || ""),
-                  }}
-                />
-                <Link
-                  href={`/post/${post.slug}`}
-                  className="text-indigo-600 font-medium hover:underline mt-auto"
-                >
-                  Read more →
-                </Link>
-              </div>
-            </article>
-          ))}
+      {/* Featured Posts Section */}
+      <section className="py-20 bg-background">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                Featured Articles
+              </h2>
+              <p className="text-muted-foreground text-lg max-w-2xl">
+                Discover the latest insights, tutorials, and trends from our
+                community of developers.
+              </p>
+            </div>
+            <Link href="/posts">
+              <Button variant="outline" className="group">
+                View All Posts
+                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+          </div>
+
+          {!posts.length ? (
+            <div className="text-center py-20 bg-muted/30 rounded-3xl border border-dashed border-border">
+              <p className="text-muted-foreground text-lg">
+                No posts found. Be the first to write one!
+              </p>
+              <Link href="/admin/posts/new" className="mt-4 inline-block">
+                <Button>Create Post</Button>
+              </Link>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {posts.slice(0, 6).map((post) => (
+                <PostCard key={post._id} post={post} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-3 gap-8">
-        <div className="p-6 bg-white shadow rounded-xl">
-          <h3 className="text-xl font-semibold mb-2">Latest Articles</h3>
-          <p className="text-gray-600">Stay up to date with fresh content.</p>
-        </div>
-        <div className="p-6 bg-white shadow rounded-xl">
-          <h3 className="text-xl font-semibold mb-2">Community</h3>
-          <p className="text-gray-600">Join and share your knowledge.</p>
-        </div>
-        <div className="p-6 bg-white shadow rounded-xl">
-          <h3 className="text-xl font-semibold mb-2">Learning Resources</h3>
-          <p className="text-gray-600">Boost your skills with tutorials.</p>
-        </div>
-      </section>
-
-      <section className="bg-gray-50 py-20">
-        <div className="max-w-6xl mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold mb-12">
-            Why Join Our Blog Community?
-          </h2>
+      {/* Features Grid */}
+      <section className="py-20 bg-secondary/30 border-y border-border/50">
+        <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="p-8 bg-white rounded-xl shadow hover:shadow-md transition">
-              <h3 className="text-xl font-semibold mb-3">Latest Knowledge</h3>
-              <p className="text-gray-600">
-                Stay ahead with curated articles on web development & tech.
+            <div className="bg-background p-8 rounded-2xl shadow-sm border border-border/50 hover:shadow-md transition-all">
+              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mb-6 text-blue-600 dark:text-blue-400">
+                <Zap className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-foreground">
+                Latest Tech
+              </h3>
+              <p className="text-muted-foreground">
+                Stay ahead of the curve with articles on the newest frameworks,
+                libraries, and tools.
               </p>
             </div>
-            <div className="p-8 bg-white rounded-xl shadow hover:shadow-md transition">
-              <h3 className="text-xl font-semibold mb-3">Active Community</h3>
-              <p className="text-gray-600">
-                Connect with other developers, share your insights & learn.
+            <div className="bg-background p-8 rounded-2xl shadow-sm border border-border/50 hover:shadow-md transition-all">
+              <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center mb-6 text-purple-600 dark:text-purple-400">
+                <Users className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-foreground">
+                Community Driven
+              </h3>
+              <p className="text-muted-foreground">
+                Connect with other developers, share your knowledge, and grow
+                together.
               </p>
             </div>
-            <div className="p-8 bg-white rounded-xl shadow hover:shadow-md transition">
-              <h3 className="text-xl font-semibold mb-3">Hands-on Tutorials</h3>
-              <p className="text-gray-600">
-                Get practical guides you can apply directly in your projects.
+            <div className="bg-background p-8 rounded-2xl shadow-sm border border-border/50 hover:shadow-md transition-all">
+              <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center mb-6 text-green-600 dark:text-green-400">
+                <BookOpen className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-foreground">
+                In-Depth Tutorials
+              </h3>
+              <p className="text-muted-foreground">
+                Master complex topics with our step-by-step guides and practical
+                examples.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CALL TO ACTION */}
-      <section className="bg-indigo-600 py-16 text-white text-center">
-        <h2 className="text-3xl font-bold mb-4">Ready to Start Learning?</h2>
-        <p className="mb-8 text-white/90">
-          Create your free account today and unlock access to exclusive content.
-        </p>
-        <Link href="/register">
-          <Button
-            size="lg"
-            className="bg-white text-indigo-600 hover:bg-gray-200"
-          >
-            Get Started
-          </Button>
-        </Link>
-      </section>
-
-      {/* <div className="max-w-5xl mx-auto p-8">
-        <h1 className="text-4xl font-bold mb-8">Latest Posts</h1>
-
-        {posts.length === 0 ? (
-          <p className="text-gray-500">No posts yet.</p>
-        ) : (
-          <div className="grid md:grid-cols-2 gap-6">
-            {posts.map((post) => (
-              <Card key={post._id} className="overflow-hidden shadow-lg">
-                {post.coverImage && (
-                  <Image
-                    src={post.coverImage}
-                    alt={post.title}
-                    className="w-full h-48 object-cover"
-                    width={120}
-                    height={192}
-                  />
-                )}
-                <CardHeader>
-                  <CardTitle>{post.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-600 mb-3">
-                    by {post.author?.username || "Unknown"} on{" "}
-                    {new Date(post.createdAt).toLocaleDateString()}
-                  </p>
-                  <p className="text-gray-700 line-clamp-3">{post.content}</p>
-                  <Link href={`/post/${post.slug}`}>
-                    <Button className="mt-4">Read More</Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
-      </div> */}
+      {/* CTA Section */}
+      {/* CTA Section */}
+      <CTASection />
     </>
   );
 }

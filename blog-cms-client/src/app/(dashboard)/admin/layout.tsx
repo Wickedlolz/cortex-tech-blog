@@ -22,14 +22,17 @@ export default function AdminLayout({
         cz-shortcut-listen="true"
       >
         <AuthProvider>
-          <div className="flex h-screen bg-gray-100">
+          <div className="flex h-screen bg-background text-foreground">
             {/* Sidebar */}
             <Sidebar />
 
             {/* Main Content */}
-            <div className="flex flex-col flex-1">
+            <div className="flex flex-col flex-1 overflow-hidden relative">
+              <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none mix-blend-soft-light z-0"></div>
               <Header />
-              <main className="flex-1 p-6 overflow-y-auto">{children}</main>
+              <main className="flex-1 p-8 overflow-y-auto relative z-10 scrollbar-hide">
+                {children}
+              </main>
             </div>
           </div>
         </AuthProvider>

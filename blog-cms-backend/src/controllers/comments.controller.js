@@ -4,16 +4,34 @@ import { Post } from "../models/Post.js";
 import { ok } from "../utils/responses.js";
 
 export async function listAllComments(req, res) {
+  const schema = z.object({
+    page: z.coerce.number().int().min(1).default(1),
+    limit: z.coerce.number().int().min(1).max(100).default(20),
+  });
+  const { page, limit } = schema.parse(req.query);
+  const skip = (page - 1) * limit;
+
   const [items, total] = await Promise.all([
     Comment.find()
       .sort({ createdAt: -1 })
-      .populate("userId")
-      .populate("postId")
+      .skip(skip)
+      .limit(limit)
+      .populate("userId", "username")
+      .populate("postId", "title slug")
       .lean(),
     Comment.countDocuments(),
   ]);
 
-  res.json(ok({ success: true, items, total }));
+  res.json(
+    ok({
+      success: true,
+      items,
+      page,
+      limit,
+      total,
+      pages: Math.ceil(total / limit),
+    })
+  );
 }
 
 export async function listComments(req, res) {
