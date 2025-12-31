@@ -5,7 +5,7 @@ import { apiFetch } from "@/lib/fetcher";
 import { useRouter, useParams } from "next/navigation";
 import { Post } from "@/types";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Editor } from "@/components/Editor";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -64,10 +64,9 @@ export default function EditPostPage() {
               value={post.title}
               onChange={(e) => setPost({ ...post, title: e.target.value })}
             />
-            <Textarea
-              value={post.content}
-              onChange={(e) => setPost({ ...post, content: e.target.value })}
-              className="h-40"
+            <Editor
+              content={post.content}
+              onUpdate={(html) => setPost({ ...post, content: html })}
             />
             <Input
               value={post.coverImage || ""}

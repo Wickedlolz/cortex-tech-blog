@@ -88,11 +88,8 @@ export default function PostsPage() {
     if (!confirm("Are you sure you want to delete this post?")) return;
 
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/${id}`, {
+      await apiFetch(`/posts/${id}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
       });
 
       fetchPosts(); // Refresh list
@@ -197,7 +194,7 @@ export default function PostsPage() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <Link href={`/admin/posts/${post.slug}/edit`}>
+                        <Link href={`/admin/posts/${post._id}/edit`}>
                           <DropdownMenuItem className="cursor-pointer">
                             <Pencil className="mr-2 h-4 w-4" /> Edit
                           </DropdownMenuItem>

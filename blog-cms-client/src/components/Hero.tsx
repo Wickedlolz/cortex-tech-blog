@@ -1,4 +1,6 @@
 import Link from "next/link";
+
+import JoinComunityButton from "./JoinComunityButton";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 
@@ -54,15 +56,7 @@ export default function Hero() {
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </Link>
-          <Link href="/register">
-            <Button
-              size="lg"
-              variant="outline"
-              className="h-12 px-8 text-lg rounded-full border-2 hover:bg-secondary/50 transition-all"
-            >
-              Join Community
-            </Button>
-          </Link>
+          <JoinComunityButton />
         </div>
       </div>
     </section>

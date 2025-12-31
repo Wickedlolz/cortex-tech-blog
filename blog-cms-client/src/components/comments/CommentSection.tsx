@@ -24,11 +24,6 @@ type CommentResponse = {
   pages: number;
 };
 
-type CommentDeleteResponse = {
-  success: boolean;
-  message: string;
-};
-
 export default function CommentSection({ postId }: { postId: string }) {
   const { user } = useAuth();
   const [comments, setComments] = useState<Comment[]>([]);
@@ -75,13 +70,11 @@ export default function CommentSection({ postId }: { postId: string }) {
 
   const handleDelete = async (id: string) => {
     try {
-      const res = await apiFetch<CommentDeleteResponse>(`/comments/${id}`, {
+      await apiFetch(`/comments/${id}`, {
         method: "DELETE",
       });
 
-      if (res.success) {
-        setComments(comments.filter((c) => c._id !== id));
-      }
+      setComments(comments.filter((c) => c._id !== id));
     } catch (error) {
       console.error("Failed to delete comment", error);
     }

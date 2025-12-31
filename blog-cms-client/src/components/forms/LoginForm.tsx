@@ -11,7 +11,7 @@ import { Button } from "../ui/button";
 const LoginForm = () => {
   const { login } = useAuth();
   const router = useRouter();
-  const [form, setForm] = useState({ username: "", password: "" });
+  const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -25,7 +25,7 @@ const LoginForm = () => {
     setLoading(true);
 
     try {
-      await login(form.username, form.password);
+      await login(form.email, form.password);
       router.push("/admin");
     } catch (err: unknown) {
       setError((err as Error).message || "Login failed");
@@ -39,13 +39,14 @@ const LoginForm = () => {
       {error && <p className="text-red-500 text-sm">{error}</p>}
 
       <div className="space-y-2">
-        <Label htmlFor="username">Username</Label>
+        <Label htmlFor="email">Email</Label>
         <Input
-          id="username"
-          name="username"
-          value={form.username}
+          id="email"
+          name="email"
+          type="email"
+          value={form.email}
           onChange={handleChange}
-          placeholder="Enter your username"
+          placeholder="Enter your email"
           required
         />
       </div>
